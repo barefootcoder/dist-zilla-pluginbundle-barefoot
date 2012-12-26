@@ -2,5 +2,7 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+0.01      2012-12-26 14:07:42 America/Los_Angeles
+
     * initial version
       shamelessly stolen from DAGOLDEN's plugin bundle
