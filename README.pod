@@ -1,0 +1,223 @@
+=pod
+
+=head1 NAME
+
+Dist::Zilla::PluginBundle::BAREFOOT - Dist::Zilla configuration the way BAREFOOT does it
+
+=head1 VERSION
+
+version 0.01
+
+=head1 SYNOPSIS
+
+   # in dist.ini
+   [@BAREFOOT]
+
+=head1 DESCRIPTION
+
+This is a L<Dist::Zilla> PluginBundle.  It is roughly equivalent to the following dist.ini:
+
+ 	; version provider
+ 	[Git::NextVersion]					; get version from last release tag
+ 	first_version = 0.01
+ 	version_regexp = ^v(.+)$
+ 
+ 	; choose files to include
+ 	[GatherDir]							; everything under top dir
+ 	exclude_filename = README.pod		; skip this generated file
+ 	exclude_filename = META.json		; skip this generated file
+ 
+ 	[PruneCruft]						; default stuff to skip
+ 	[ManifestSkip]						; if -f MANIFEST.SKIP, skip those, too
+ 
+ 	; file modifications
+ 	[OurPkgVersion]						; add $VERSION = ... to all files
+ 	[InsertCopyright					; add copyright at "# COPYRIGHT"
+ 	[PodWeaver]							; generate Pod
+ 	config_plugin = @BAREFOOT			; allows Pod::WikiDoc and a few other bits and bobs
+ 
+ 	; generated files
+ 	[License]							; boilerplate license
+ 	[ReadmeFromPod]						; from Pod (runs after PodWeaver)
+ 	[ReadmeAnyFromPod]					; create README.pod in repo directory
+ 	type = pod
+ 	filename = README.pod
+ 	location = root
+ 
+ 	; xt tests
+ 	[Test::PodSpelling]					; xt/author/pod-spell.t
+ 	[MetaTests]							; xt/release/meta-yaml.t
+ 	[PodSyntaxTests]					; xt/release/pod-syntax.t
+ 	[PodCoverageTests]					; xt/release/pod-coverage.t
+ 	[Test::Version]						; xt/release/test-version.t
+ 
+ 	; metadata
+ 	[AutoPrereqs]						; find prereqs from code
+ 	skip = ^t::lib
+ 
+ 	[MinimumPerl]						; determine minimum perl version
+ 	[GithubMeta]
+ 	remote = origin
+ 
+ 	[MetaNoIndex]						; sets 'no_index' in META
+ 	directory = t
+ 	directory = xt
+ 	directory = examples
+ 	directory = corpus
+ 	package = DB						; just in case
+ 
+ 	[Bugtracker]
+ 	web = http://github.com/me/%l/issues
+ 
+ 	; can't get this one to work right ATM
+ 	; [MetaProvides::Package]			; add 'provides' to META files
+ 	; meta_noindex = 1					; respect prior no_index directives
+ 
+ 	[MetaYAML]							; generate META.yml (v1.4)
+ 	[MetaJSON]							; generate META.json (v2)
+ 
+ 	; build system
+ 	[ExecDir]							; include 'bin/*' as executables
+ 	[ShareDir]							; include 'share/' for File::ShareDir
+ 	[MakeMaker]							; create Makefile.PL
+ 
+ 	; manifest (after all generated files)
+ 	[Manifest]							; create MANIFEST
+ 
+ 	; move README.pod back to repo dir
+ 	[CopyFilesFromBuild]
+ 	move = README.pod
+ 
+ 	; before release
+ 	[Git::Check]						; ensure all files checked in
+ 	allow_dirty = dist.ini
+ 	allow_dirty = Changes
+ 	allow_dirty = README.pod
+ 	allow_dirty = META.json
+ 
+ 	[CheckPrereqsIndexed]				; ensure prereqs are on CPAN
+ 	[CheckChangesHasContent]			; ensure Changes has been updated
+ 	[CheckExtraTests]					; ensure xt/ tests pass
+ 	[TestRelease]						; ensure t/ tests pass
+ 	[ConfirmRelease]					; prompt before uploading
+ 
+ 	; releaser
+ 	[UploadToCPAN]						; uploads to CPAN
+ 
+ 	; after release
+ 	[Git::Commit / Commit_Dirty_Files]	; commit Changes (as released)
+ 
+ 	[Git::Tag]							; tag repo with custom tag
+ 	tag_format = v%v					; this one is overridable
+ 	tag_message = version %v for CPAN	; this one isn't
+ 
+ 	; NextRelease acts *during* pre-release to write $VERSION and
+ 	; timestamp to Changes and  *after* release to add a new {{$NEXT}}
+ 	; section, so to act at the right time after release, it must actually
+ 	; come after Commit_Dirty_Files but before Commit_Changes in the
+ 	; dist.ini.  It will still act during pre-release as usual
+ 	[NextRelease]
+ 
+ 	[Git::Commit / Commit_Changes]		; commit Changes (for new dev)
+ 
+ 	[Git::Push]							; push repo to remote
+ 	push_to = origin
+
+=begin stopwords
+
+
+
+
+=end stopwords
+
+=for Pod::Coverage configure mvp_multivalue_args
+
+=head1 USAGE
+
+To use this PluginBundle, just add it to your dist.ini.  You can provide the following options:
+
+=over
+
+=item *
+
+C<<< auto_prereq >>> -- This indicates whether AutoPrereq should be used or not.  Default is 1.
+
+=item *
+
+C<<< tag_format >>> -- Given to C<<< Git::Tag >>>.  Default is 'v%v'.
+
+=item *
+
+C<<< version_regexp >>> -- Given to C<<< Git::NextVersion >>>.  Default is '^v(.+)$'.
+
+=item *
+
+C<<< git_remote >>> -- Given to C<<< Git::Push >>> _in addition to_ origin; given to GithubMeta _instead of_
+origin.
+
+=item *
+
+C<<< fake_release >>> -- Swaps FakeRelease for UploadToCPAN. Mostly useful for testing a dist.ini without
+risking a real release.
+
+=item *
+
+C<<< weaver_config >>> -- Specifies a Pod::Weaver bundle.  Defaults to @BAREFOOT.
+
+=item *
+
+C<<< stopwords >>> -- Add stopword for Test::PodSpelling (can be repeated).
+
+=item *
+
+C<<< no_spellcheck >>> -- Omit Test::PodSpelling tests.
+
+=back
+
+=head1 INSTALLATION
+
+If you want to make sure you have all the necessary prereqs, try this (from the dir you checked out
+the distro into):
+
+ 	perl -lne 'print $1 if /Dependencies/../VERSION/ and /use\s+(\S+)/' lib/*/*/PluginBundle/BAREFOOT.pm | cpanm -n
+
+=head1 SEE ALSO
+
+=over
+
+=item *
+
+L<Dist::Zilla>
+
+=item *
+
+L<Dist::Zilla::Plugin::PodWeaver>
+
+=back
+
+=head1 AUTHOR
+
+Buddy Burden <barefoot@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2012 by Buddy Burden.
+
+This is free software, licensed under:
+
+  The Artistic License 2.0 (GPL Compatible)
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 SUPPORT
+
+=head2 Perldoc
+
+You can find documentation for this module with the perldoc command.
+
+  perldoc Dist::Zilla::PluginBundle::BAREFOOT
+
+=head2 Bugs / Feature Requests
+
+none
+
