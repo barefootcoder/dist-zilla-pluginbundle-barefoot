@@ -2,6 +2,8 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+0.01_02   2013-02-17 16:08:06 PST8PDT
+
 	* change FakeRelease to UploadToCPAN
 
 0.01_01   2013-02-17 16:03:34 PST8PDT
