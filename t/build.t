@@ -1,5 +1,5 @@
 use Test::Most		0.25;
-use Test::Command	0.08;
+use Test::Command	0.10;
 
 use Path::Class;
 use File::Temp qw< tempdir >;
@@ -9,8 +9,8 @@ my $dir = tempdir( CLEANUP => 1 );
 
 my @filter_out =
 (
-	'\[DZ\]',
-	'\[@BAREFOOT/ReadmeAnyFromPod\] Override README\.pod in root',
+	'\[DZ\].*',
+	'\[(@BAREFOOT/)?ReadmeAnyFromPod\] Override README\.pod in root',
 );
 
 
@@ -21,13 +21,24 @@ chdir '../..';
 #	*	keeps from building in a build dir, which does very wonky things
 #	*	tempdir can be cleaned up automatically, so no need to do a dzil clean
 #	**		(which is good, because clean doesn't take a --in param)
-my $cmd = join(' | ', "dzil build --in $dir", map { "grep -v '$_'" } @filter_out);
-$cmd = Test::Command->new( cmd => $cmd );
-$cmd->stdout_is_eq('', 'no unexpected lines in build');
+my $cmd = Test::Command->new( cmd => "dzil build --in $dir" );
+my $stdout = $cmd->stdout_value;
+my $stderr = $cmd->stderr_value;
+
+# remove lines we don't care about
+for ($stdout, $stderr)
+{
+	foreach my $pattern (@filter_out)
+	{
+		s/^$pattern\n//mg;
+	}
+}
+
+is $stdout, '', 'no unexpected lines in build';
 TODO:
 {
 	local $TODO = 'not sure why this is failing ...';
-	$cmd->stderr_is_eq('', 'no error lines in build');
+	is $stderr, '', 'no error lines in build';
 }
 
 
