@@ -2,6 +2,8 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+	* change FakeRelease to UploadToCPAN
+
 0.01_01   2013-02-17 16:03:34 PST8PDT
 
 	* added AutoPrereqs
