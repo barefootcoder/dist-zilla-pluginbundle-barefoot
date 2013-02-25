@@ -2,6 +2,13 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+0.03_01   2013-02-25 02:08:35 PST8PDT
+
+	* added check for uncommitted files
+	* fixed double commit on release [GitHub #1]
+	* ditching README.pod in favor of (static) README.md [GitHub #4]
+	* adding dzil build dirs to Git ignore file
+
 0.03      2013-02-21 12:47:46 PST8PDT
 
 	*	added CheckChangesHasContent
