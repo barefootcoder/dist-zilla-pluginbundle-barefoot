@@ -12,8 +12,8 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 	# Dependencies
 	use Dist::Zilla									4.3			  ;		# authordeps
 
-	use Dist::Zilla::PluginBundle::Git							();
-	#use Dist::Zilla::PluginBundle::Filter						();
+	# supplies: Git::Check, Git::Commit, Git::NextVersion, Git::Push, Git::Tag
+	use Dist::Zilla::PluginBundle::Git				2.013		();
 
 	use Dist::Zilla::Plugin::PodWeaver							();
 	use Dist::Zilla::Plugin::GithubMeta				0.10		();
@@ -25,7 +25,6 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 	use Dist::Zilla::Plugin::Test::Version						();
 	use Dist::Zilla::Plugin::CheckExtraTests					();
 	use Dist::Zilla::Plugin::InsertCopyright		0.001		();
-	use Dist::Zilla::Plugin::Git::NextVersion					();
 	use Dist::Zilla::Plugin::ReadmeAnyFromPod		0.120051	();
 	use Dist::Zilla::Plugin::Test::PodSpelling		2.001002	();
 	use Dist::Zilla::Plugin::CopyFilesFromBuild					();
@@ -36,7 +35,8 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 
 	# VERSION
 
-	my @dirty_files = qw< dist.ini Changes README.pod >;
+	my @dirty_files = qw< dist.ini Changes >;
+	my @exclude_generated_files = qw< README.pod META.json >;
 
 
 	sub mvp_multivalue_args { qw/stopwords/ }
@@ -59,20 +59,24 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 		$self->add_plugins (
 
 			# version number
-			[ 'Git::NextVersion'		=>	{ first_version => '0.01', version_regexp => $self->version_regexp } ],
+			#[ 'Git::NextVersion'		=>	{ first_version => '0.01', version_regexp => $self->version_regexp } ],
 
 			# gather and prune
-			[ GatherDir					=>	{ exclude_filename => [qw< README.pod >] }],		# core
-			PruneCruft					=>														# core
-			ManifestSkip				=>														# core
+			[ GatherDir					=>	{ exclude_filename => [@exclude_generated_files] }],# core
+			#PruneCruft					=>														# core
+			#ManifestSkip				=>														# core
 
+		( $self->auto_prereq
+		?	[ AutoPrereqs				=>	{ skip => "^t::lib" } ]
+		:	()
+		),
+			#
 			# file munging
 			OurPkgVersion				=>
-			InsertCopyright				=>
+			#InsertCopyright				=>
 			[ PodWeaver					=>	{ config_plugin => $self->weaver_config } ],
 
 			# generated distribution files
-			ReadmeFromPod				=>
 			License						=>														# core
 			[ ReadmeAnyFromPod			=>	{	# generate in root for github, etc.
 												type		=> 'pod',
@@ -80,32 +84,28 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 												location	=> 'root',
 											}
 			],
+			[ Bugtracker				=>	{ web => 'http://github.com/me/%l/issues' } ],
 
-			# generated xt/ tests
-		( $self->no_spellcheck
-		?	()
-		:	[ 'Test::PodSpelling'		=>	{ stopwords => $self->stopwords } ]
-		),
-			MetaTests					=>														# core
-			PodSyntaxTests				=>														# core
-			PodCoverageTests			=>														# core
-			'Test::Version'				=>
+#			# generated xt/ tests
+#		( $self->no_spellcheck
+#		?	()
+#		:	[ 'Test::PodSpelling'		=>	{ stopwords => $self->stopwords } ]
+#		),
+#			MetaTests					=>														# core
+#			PodSyntaxTests				=>														# core
+#			PodCoverageTests			=>														# core
+#			'Test::Version'				=>
 
 			# metadata
-			MinimumPerl					=>
-		( $self->auto_prereq
-		?	[ AutoPrereqs				=>	{ skip => "^t::lib" } ]
-		:	()
-		),
+			#MinimumPerl					=>
 			[ GithubMeta				=>	{ remote => $self->git_remote } ],
-			[ MetaNoIndex				=>	{
-												directory	=> [qw< t xt examples corpus >],
-												package		=> [qw< DB >]
-											}
-			],
+			#[ MetaNoIndex				=>	{
+			#									directory	=> [qw< t xt examples corpus >],
+			#									package		=> [qw< DB >]
+			#								}
+			#],
 			#[ 'MetaProvides::Package'	=>	{ meta_noindex => 1 } ],							# AFTER MetaNoIndex
-			[ Bugtracker				=>	{ web => "http://github.com/me/%l/issues" } ],
-			MetaYAML					=>														# core
+			#MetaYAML					=>														# core
 			MetaJSON					=>														# core
 
 			# build system
@@ -113,24 +113,18 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 			ShareDir					=>														# core
 			MakeMaker					=>														# core
 
-			# copy files from build back to root for inclusion in VCS
-			[ CopyFilesFromBuild		=>	{
-												move => 'README.pod',
-											}
-			],
-
 			# manifest -- must come after all generated files
 			Manifest					=>														# core
 
 			# before release
+			TestRelease					=>														# core
 			[ 'Git::Check'				=>	{
-												allow_dirty	=> [@dirty_files]
+												allow_dirty	=> [@dirty_files, @exclude_generated_files]
 											}
 			],
-			CheckPrereqsIndexed			=>
+			#CheckPrereqsIndexed			=>
 			CheckChangesHasContent		=>
-			CheckExtraTests				=>
-			TestRelease					=>														# core
+			#CheckExtraTests				=>
 			ConfirmRelease				=>														# core
 
 			# release
@@ -141,8 +135,15 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 
 			# after release
 			# Note -- NextRelease is here to get the ordering right with
-			# git actions.  It is *also* a file munger that acts earlier
+			# git actions.  It is *also* a file munger that acts earlier.
 
+			[ 'Git::Tag'				=>	{
+												tag_format	=> $self->tag_format,
+												tag_message	=> 'version %v for CPAN',
+											}
+			],
+			# bumps Changes
+			NextRelease					=>														# core (also munges files)
 			# commit dirty Changes, dist.ini, README.pod
 			[ 'Git::Commit'				=>
 											{
@@ -150,14 +151,6 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 												commit_msg	=> "packaging for CPAN: %v",
 											}
 			],
-			[ 'Git::Tag'				=>	{
-												tag_format	=> $self->tag_format,
-												tag_message	=> 'version %v for CPAN',
-											}
-			],
-
-			# bumps Changes
-			NextRelease					=>														# core (also munges files)
 
 			[ 'Git::Push'				=>	{ push_to => [@push_to] } ],
 
@@ -191,63 +184,62 @@ __END__
 This is a [Dist::Zilla] PluginBundle.  It is roughly equivalent to the following dist.ini:
 
 	; version provider
-	[Git::NextVersion]					; get version from last release tag
-	first_version = 0.01
-	version_regexp = ^v(.+)$
+	; hopefully soemething here soon
 
 	; choose files to include
 	[GatherDir]							; everything under top dir
 	exclude_filename = README.pod		; skip this generated file
 	exclude_filename = META.json		; skip this generated file
 
-	[PruneCruft]						; default stuff to skip
-	[ManifestSkip]						; if -f MANIFEST.SKIP, skip those, too
+	;[PruneCruft]						; default stuff to skip
+	;[ManifestSkip]						; if -f MANIFEST.SKIP, skip those, too
+
+	; this should probably be moved to metadata section
+	[AutoPrereqs]						; find prereqs from code
+	skip = ^t::lib
 
 	; file modifications
 	[OurPkgVersion]						; add $VERSION = ... to all files
-	[InsertCopyright					; add copyright at "# COPYRIGHT"
+	;[InsertCopyright					; add copyright at "# COPYRIGHT"
 	[PodWeaver]							; generate Pod
 	config_plugin = @BAREFOOT			; allows Pod::WikiDoc and a few other bits and bobs
 
 	; generated files
 	[License]							; boilerplate license
-	[ReadmeFromPod]						; from Pod (runs after PodWeaver)
 	[ReadmeAnyFromPod]					; create README.pod in repo directory
 	type = pod
 	filename = README.pod
 	location = root
 
+	; should this be in metadata section?
+	[Bugtracker]
+	web = http://github.com/me/%l/issues
+
 	; xt tests
-	[Test::PodSpelling]					; xt/author/pod-spell.t
-	[MetaTests]							; xt/release/meta-yaml.t
-	[PodSyntaxTests]					; xt/release/pod-syntax.t
-	[PodCoverageTests]					; xt/release/pod-coverage.t
-	[Test::Version]						; xt/release/test-version.t
+	;[Test::PodSpelling]					; xt/author/pod-spell.t
+	;[MetaTests]							; xt/release/meta-yaml.t
+	;[PodSyntaxTests]					; xt/release/pod-syntax.t
+	;[PodCoverageTests]					; xt/release/pod-coverage.t
+	;[Test::Version]						; xt/release/test-version.t
 
 	; metadata
-	[AutoPrereqs]						; find prereqs from code
-	skip = ^t::lib
-
-	[MinimumPerl]						; determine minimum perl version
+	;[MinimumPerl]						; determine minimum perl version
 	[GithubMeta]
 	remote = origin
 
-	[MetaNoIndex]						; sets 'no_index' in META
-	directory = t
-	directory = xt
-	directory = examples
-	directory = corpus
-	package = DB						; just in case
+	;[MetaYAML]							; generate META.yml (v1.4)
+	[MetaJSON]							; generate META.json (v2)
 
-	[Bugtracker]
-	web = http://github.com/me/%l/issues
+	;[MetaNoIndex]						; sets 'no_index' in META
+	;directory = t
+	;directory = xt
+	;directory = examples
+	;directory = corpus
+	;package = DB						; just in case
 
 	; can't get this one to work right ATM
 	; [MetaProvides::Package]			; add 'provides' to META files
 	; meta_noindex = 1					; respect prior no_index directives
-
-	[MetaYAML]							; generate META.yml (v1.4)
-	[MetaJSON]							; generate META.json (v2)
 
 	; build system
 	[ExecDir]							; include 'bin/*' as executables
@@ -257,20 +249,16 @@ This is a [Dist::Zilla] PluginBundle.  It is roughly equivalent to the following
 	; manifest (after all generated files)
 	[Manifest]							; create MANIFEST
 
-	; move README.pod back to repo dir
-	[CopyFilesFromBuild]
-	move = README.pod
-
 	; before release
 	[Git::Check]						; ensure all files checked in
 	allow_dirty = dist.ini
 	allow_dirty = Changes
-	allow_dirty = README.pod
-	allow_dirty = META.json
+	allow_dirty = README.pod			; ignore this generated file
+	allow_dirty = META.json				; ignore this generated file
 
-	[CheckPrereqsIndexed]				; ensure prereqs are on CPAN
+	;[CheckPrereqsIndexed]				; ensure prereqs are on CPAN
 	[CheckChangesHasContent]			; ensure Changes has been updated
-	[CheckExtraTests]					; ensure xt/ tests pass
+	;[CheckExtraTests]					; ensure xt/ tests pass
 	[TestRelease]						; ensure t/ tests pass
 	[ConfirmRelease]					; prompt before uploading
 
@@ -278,20 +266,18 @@ This is a [Dist::Zilla] PluginBundle.  It is roughly equivalent to the following
 	[UploadToCPAN]						; uploads to CPAN
 
 	; after release
-	[Git::Commit / Commit_Dirty_Files]	; commit Changes (as released)
-
 	[Git::Tag]							; tag repo with custom tag
 	tag_format = v%v					; this one is overridable
 	tag_message = version %v for CPAN	; this one isn't
 
 	; NextRelease acts *during* pre-release to write $VERSION and
 	; timestamp to Changes and  *after* release to add a new {{$NEXT}}
-	; section, so to act at the right time after release, it must actually
-	; come after Commit_Dirty_Files but before Commit_Changes in the
-	; dist.ini.  It will still act during pre-release as usual
+	; section, so to act at the right time after release, it must come
+	; after UploadToCPAN but before Git::Commit in the dist.ini.  It
+	; will still act during pre-release as usual.
 	[NextRelease]
 
-	[Git::Commit / Commit_Changes]		; commit Changes (for new dev)
+	[Git::Commit]						; commit Changes (for new dev)
 
 	[Git::Push]							; push repo to remote
 	push_to = origin

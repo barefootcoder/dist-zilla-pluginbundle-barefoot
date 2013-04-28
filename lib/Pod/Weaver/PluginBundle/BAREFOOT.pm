@@ -32,6 +32,7 @@ END
 		my @plugins;
 		push @plugins, (
 			[ '@BAREFOOT/WikiDoc',     _exp('-WikiDoc'),	{} ],
+
 			[ '@BAREFOOT/CorePrep',    _exp('@CorePrep'),	{} ],
 			[ '@BAREFOOT/Name',        _exp('Name'),		{} ],
 			[ '@BAREFOOT/Version',     _exp('Version'),		{
@@ -39,16 +40,15 @@ END
 															}
 			],
 
-			#[ '@BAREFOOT/Prelude',     _exp('Region'),		{ region_name => 'prelude'     } ],
 			[ '@BAREFOOT/Synopsis',    _exp('Generic'),		{ header      => 'SYNOPSIS'    } ],
 			[ '@BAREFOOT/Description', _exp('Generic'),		{ header      => 'DESCRIPTION' } ],
 			[ '@BAREFOOT/Overview',    _exp('Generic'),		{ header      => 'OVERVIEW'    } ],
 		);
 
 		for my $plugin (
-			[ 'Attributes', _exp('Collect'),				{ command => 'attr'   } ],
-			[ 'Methods',    _exp('Collect'),				{ command => 'method' } ],
-			[ 'Functions',  _exp('Collect'),				{ command => 'func'   } ],
+			[ 'Attributes', 			_exp('Collect'),	{ command => 'attr'   } ],
+			[ 'Methods',    			_exp('Collect'),	{ command => 'method' } ],
+			[ 'Functions',  			_exp('Collect'),	{ command => 'func'   } ],
 		){
 			$plugin->[2]->{'header'} = uc $plugin->[0];
 			push @plugins, $plugin;
@@ -91,14 +91,35 @@ following weaver.ini:
 
   [-WikiDoc]
 
-  [@Default]
+  [@CorePrep]
 
+  [Name]
+  [Version]
+
+  [Generic / SYNOPSIS]
+  [Generic / DESCRIPTION]
+  [Generic / OVERVIEW]
+
+  [Collect / ATTRIBUTES]
+  command = attr
+
+  [Collect / METHODS]
+  command = method
+
+  [Collect / FUNCTIONS]
+  command = func
+
+  [Leftovers]
   [Support]
   perldoc = 1
   websites = none
   bugs = metadata
   bugs_content = ... stuff (web only, email omitted) ...
-  repository_link = none
+  repository_link = both
+  repository_content = none
+
+  [Authors]
+  [Legal]
 
   [-Transformer]
   transfomer = List
