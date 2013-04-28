@@ -15,7 +15,9 @@ my @filter_out =
 
 
 # pop back up to actual dist dir for this test
-chdir '../..';
+sub inside_build_dir { grep { $_ eq '.build' } dir()->absolute->components }
+BAIL_OUT("can't understand my current directory structure") unless inside_build_dir();
+chdir '..' while inside_build_dir();
 
 # try to build again, but in a temp dir
 #	*	keeps from building in a build dir, which does very wonky things
@@ -35,11 +37,7 @@ for ($stdout, $stderr)
 }
 
 is $stdout, '', 'no unexpected lines in build';
-TODO:
-{
-	local $TODO = 'not sure why this is failing ...';
-	is $stderr, '', 'no error lines in build';
-}
+is $stderr, '', 'no error lines in build';
 
 
 done_testing;
