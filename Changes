@@ -2,6 +2,11 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+0.03_03   2013-04-28 14:41:58 PST8PDT
+
+	* made plugins in the bundle match the dist.ini
+		(first step toward fixing GitHub #2)
+
 0.03_02   2013-04-27 23:30:18 PST8PDT
 
 	* fixed build error when doing `dzil release`
