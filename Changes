@@ -2,6 +2,11 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+0.03_04   2013-05-02 01:58:51 PST8PDT
+
+	* complete the transmogrification of dist.ini
+		(to make self-hosting: GitHub #2)
+
 0.03_03   2013-04-28 14:41:58 PST8PDT
 
 	* made plugins in the bundle match the dist.ini
