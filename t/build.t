@@ -15,14 +15,16 @@ my @filter_out =
 
 
 # pop back up to actual dist dir for this test
+# if doing an actual install, there is no actual dist dir, so just skip all
+#diag `pwd ; ls`;
 sub inside_build_dir { grep { $_ eq '.build' } dir()->absolute->components }
-BAIL_OUT("can't understand my current directory structure") unless inside_build_dir();
+plan skip_all => "can't understand my current directory structure" unless inside_build_dir();
 chdir '..' while inside_build_dir();
 
 # try to build again, but in a temp dir
 #	*	keeps from building in a build dir, which does very wonky things
 #	*	tempdir can be cleaned up automatically, so no need to do a dzil clean
-#	**		(which is good, because clean doesn't take a --in param)
+#	**		(which is good, because clean doesn't take an --in param)
 my $cmd = Test::Command->new( cmd => "dzil build --in $dir" );
 my $stdout = $cmd->stdout_value;
 my $stderr = $cmd->stderr_value;
