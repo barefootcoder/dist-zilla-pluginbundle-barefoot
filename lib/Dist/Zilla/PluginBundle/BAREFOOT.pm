@@ -4,10 +4,11 @@ use Method::Signatures::Modifiers;
 
 class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::Easy
 {
-	use autodie										2.00				;
-	use List::MoreUtils											'uniq'	;
-	use MooseX::Has::Sugar												;
-	use MooseX::Types::Moose									':all'	;
+	use autodie										2.00					;
+	use PerlX::Maybe								0.003		'provided'	;
+	use List::MoreUtils											'uniq'		;
+	use MooseX::Has::Sugar													;
+	use MooseX::Types::Moose									':all'		;
 
 	# Dependencies
 	use Dist::Zilla									4.3			  ;		# authordeps
@@ -67,10 +68,8 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 			#PruneCruft					=>														# core
 			#ManifestSkip				=>														# core
 
-		( $self->auto_prereq
-		?	[ AutoPrereqs				=>	{ skip => "^t::lib" } ]
-		:	()
-		),
+provided $self->auto_prereq,
+			[ AutoPrereqs				=>	{ skip => "^t::lib" } ],
 			#
 			# file munging
 			OurPkgVersion				=>
@@ -88,10 +87,8 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 			[ Bugtracker				=>	{ web => 'http://github.com/me/%l/issues' } ],
 
 #			# generated xt/ tests
-#		( $self->no_spellcheck
-#		?	()
-#		:	[ 'Test::PodSpelling'		=>	{ stopwords => $self->stopwords } ]
-#		),
+#provided not $self->no_spellcheck,
+#			[ 'Test::PodSpelling'		=>	{ stopwords => $self->stopwords } ],
 #			MetaTests					=>														# core
 #			PodSyntaxTests				=>														# core
 #			PodCoverageTests			=>														# core
@@ -130,10 +127,9 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 			ConfirmRelease				=>														# core
 
 			# release
-		( $self->fake_release
+$self->fake_release
 		?	'FakeRelease'
-		:	'UploadToCPAN'																		# core
-		),
+		:	'UploadToCPAN',																		# core
 
 			# after release
 			# Note -- NextRelease is here to get the ordering right with
