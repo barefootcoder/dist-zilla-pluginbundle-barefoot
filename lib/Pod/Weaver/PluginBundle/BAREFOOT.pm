@@ -34,6 +34,12 @@ END
 
 	method mvp_bundle_config ($class: ...)
 	{
+		# get payload (configurable parameters) from the dzil plugin bundle
+		my $payload = Dist::Zilla::PluginBundle::BAREFOOT->weaver_payload;
+
+		# now set default values for them
+		$payload->{'repository_link'}	//= 'both';
+
 		my @plugins;
 		push @plugins, (
 			[ '@BAREFOOT/WikiDoc',     _exp('-WikiDoc'),	{} ],
@@ -66,7 +72,7 @@ END
 																websites			=> 'none',
 																bugs				=> 'metadata',
 																bugs_content		=> $bugtracker_content,
-																repository_link		=> 'both',
+																repository_link		=> $payload->{'repository_link'},
 																repository_content	=> 'none',
 															}
 			],

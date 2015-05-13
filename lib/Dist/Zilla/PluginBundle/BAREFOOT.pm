@@ -9,6 +9,7 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 	use List::MoreUtils											'uniq'		;
 	use MooseX::Has::Sugar													;
 	use MooseX::Types::Moose									':all'		;
+	use MooseX::ClassAttribute												;
 
 	# Dependencies
 	use Dist::Zilla									4.3			  ;		# authordeps
@@ -40,6 +41,9 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 	my @dirty_files = qw< dist.ini Changes >;
 	my @exclude_generated_files = qw< README.pod META.json >;
 
+	class_has weaver_payload	=>	( ro, writer => '_store_weaver_data', isa => HashRef, lazy,
+											default => sub { die "class attribute weaver_payload called too soon!" }, );
+
 
 	sub mvp_multivalue_args { qw/stopwords/ }
 
@@ -49,7 +53,6 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 	has auto_prereq		=>	( ro, isa => Bool, lazy, default => method { $self->payload->{'auto_prereq'} // 1 } );
 	has tag_format		=>	( ro, isa => Str, lazy, default => method { $self->payload->{'tag_format'} // 'v%v' } );
 	has version_regexp	=>	( ro, isa => Str, lazy, default => method { $self->payload->{'version_regexp'} // '^v(.+)$' } );
-	has weaver_config	=>	( ro, isa => Str, lazy, default => method { $self->payload->{'weaver_config'} // '@BAREFOOT' } );
 	has git_remote		=>	( ro, isa => Str, lazy, default => method { $self->payload->{'git_remote'} // 'origin' } );
 	has legal_addendum	=>	( ro, isa => Str, lazy, default => method { $self->payload->{'legal_addendum'} // '' } );
 
@@ -74,7 +77,7 @@ provided $self->auto_prereq,
 			# file munging
 			OurPkgVersion				=>
 			#InsertCopyright				=>
-			[ PodWeaver					=>	{ config_plugin => $self->weaver_config } ],
+			[ PodWeaver					=>	{ config_plugin => '@BAREFOOT', } ],
 
 			# generated distribution files
 			License						=>														# core
@@ -153,6 +156,9 @@ $self->fake_release
 			[ 'Git::Push'				=>	{ push_to => [@push_to] } ],
 
 		);
+
+		my @weaver_params = qw< repository_link >;
+		$self->_store_weaver_data({ map { $_ => $self->payload->{$_} } @weaver_params });
 
 	}
 
@@ -292,9 +298,9 @@ To use this PluginBundle, just add it to your dist.ini.  You can provide the fol
 origin.
 * {fake_release} -- Swaps FakeRelease for UploadToCPAN. Mostly useful for testing a dist.ini without
 risking a real release.
-* {weaver_config} -- Specifies a Pod::Weaver bundle.  Defaults to @BAREFOOT.
 * {stopwords} -- Add stopword for Test::PodSpelling (can be repeated).
 * {no_spellcheck} -- Omit Test::PodSpelling tests.
+* {repository_link} -- Override the Pod::Weaver [Support] section default (which is "both").
 
 = INSTALLATION
 
