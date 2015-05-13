@@ -1,8 +1,12 @@
-use strict;
-use warnings;
+use 5.012;
+use MooseX::Declare;
+use Method::Signatures::Modifiers;
 
+class Pod::Weaver::PluginBundle::BAREFOOT
 {
-	package Pod::Weaver::PluginBundle::BAREFOOT;
+	use autodie										2.00				;
+	use MooseX::Has::Sugar												;
+	use MooseX::Types::Moose									':all'	;
 
 	# Dependencies
 	use Pod::Weaver 3.101635; # fixed ABSTRACT scanning
@@ -15,6 +19,7 @@ use warnings;
 
 	# VERSION
 
+
 	my $bugtracker_content = <<'END';
 		This module is on GitHub.  Feel free to fork and submit patches.  Please note that I develop
 		via TDD (Test-Driven Development), so a patch that includes a failing test is much more
@@ -25,9 +30,9 @@ use warnings;
 END
 
 
-	sub _exp { Pod::Weaver::Config::Assembler->expand_package($_[0]) }
+	method _exp { Pod::Weaver::Config::Assembler->expand_package($self) }
 
-	sub mvp_bundle_config
+	method mvp_bundle_config ($class: ...)
 	{
 		my @plugins;
 		push @plugins, (
