@@ -10,7 +10,7 @@ my $dir = tempdir( CLEANUP => 1 );
 my @filter_out =
 (
 	'\[DZ\].*',
-	'\[(@BAREFOOT/)?ReadmeAnyFromPod\] Override README\.pod in root',
+	'\[(@BAREFOOT/)?ReadmeAnyFromPod\] (?i:overrid\w+) README\.pod in root',
 );
 
 
@@ -18,7 +18,7 @@ my @filter_out =
 # if doing an actual install, there is no actual dist dir, so just skip all
 #diag `pwd ; ls`;
 sub inside_build_dir { grep { $_ eq '.build' } dir()->absolute->components }
-plan skip_all => "can't understand my current directory structure" unless inside_build_dir();
+plan skip_all => "can't understand my current directory structure [" . dir()->absolute . "]" unless inside_build_dir();
 chdir '..' while inside_build_dir();
 
 # try to build again, but in a temp dir
