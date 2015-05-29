@@ -33,6 +33,7 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 	use Dist::Zilla::Plugin::CheckPrereqsIndexed	0.002		();
 	use Dist::Zilla::Plugin::CheckVersionIncrement	0.121750	();
 	#use Dist::Zilla::Plugin::MetaProvides::Package	1.14		();		# hides DB/main/private packages
+	use Dist::Zilla::Plugin::MetaProvides::Class	2.001		();		# adds 'provides' to META.* for `class`
 	use Dist::Zilla::Plugin::CheckChangesHasContent				();
 
 
@@ -105,7 +106,8 @@ provided $self->auto_prereq,
 			#									package		=> [qw< DB >]
 			#								}
 			#],
-			#[ 'MetaProvides::Package'	=>	{ meta_noindex => 1 } ],							# AFTER MetaNoIndex
+			#[ 'MetaProvides::Package'	=>	{ meta_noindex => 1 } ],
+			[ 'MetaProvides::Class'		=>	{ inherit_version => 1 } ],							# AFTER MetaNoIndex
 			#MetaYAML					=>														# core
 			MetaJSON					=>														# core
 
@@ -244,6 +246,8 @@ This is a [Dist::Zilla] PluginBundle.  It is roughly equivalent to the following
 	; can't get this one to work right ATM
 	; [MetaProvides::Package]			; add 'provides' to META files
 	; meta_noindex = 1					; respect prior no_index directives
+	[MetaProvides::Class]				; add 'provides' to META files for classes
+	inherit_version = 1 				; use version from dist.ini
 
 	; build system
 	[ExecDir]							; include 'bin/*' as executables

@@ -36,10 +36,11 @@ END
 my $lib = path( 'lib', 'Test' );
 $lib->mkpath;
 $lib->path('Module.pm')->spew( <<'END' );
-package Test::Module;
-
+class Test::Module with Some::Role
+{
 # ABSTRACT: Just a module for testing
 # VERSION
+}
 
 1;
 END
@@ -63,6 +64,7 @@ chdir "$tname-$tversion";
 my $meta = path('META.json')->slurp;
 
 like $meta, qr/"version" \s* : \s* "$tversion"/x, 'version is correct in meta';
+like $meta, qr/"provides" \s* : /x, 'contains a `provides` in meta';
 
 
 done_testing;

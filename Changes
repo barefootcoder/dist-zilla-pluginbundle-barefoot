@@ -2,7 +2,9 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+	* add `provides` to meta; PAUSE can no longer get namespace from distname
 	* refactor main class to use PerlX::Maybe
+	* promote to full version
 
 0.03_05   2013-05-06 00:41:17 PST8PDT
 	
