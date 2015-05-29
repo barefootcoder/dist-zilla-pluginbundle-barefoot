@@ -15,22 +15,22 @@ chdir $tdist;
 
 # create a skeletal distribution
 
+my $tname = 'Test-Module';
+my $tversion = '0.01';
+
 #[@Filter]
 #-bundle = @BAREFOOT
 #-remove = GitHubMeta
-path('dist.ini')->spew( <<'END' );
-name				= Test-Module
-author				= Buddy Burden <barefoot@cpan.org>
+path('dist.ini')->spew( <<END );
+name				= $tname
+author				= Buddy Burden <barefoot\@cpan.org>
 license				= Artistic_2_0
 copyright_holder	= Buddy Burden
 
-version = 0.01
-[@BAREFOOT]
+version = $tversion
+[\@BAREFOOT]
 fake_release = 1
 repository_link = none
-END
-
-path('weaver.inix')->spew( <<'END' );
 END
 
 my $lib = path( 'lib', 'Test' );
@@ -58,7 +58,11 @@ END
 # now build our test dist so we can have some files to test
 
 demand_successful_command("dzil build");
-pass;
+chdir "$tname-$tversion";
+
+my $meta = path('META.json')->slurp;
+
+like $meta, qr/"version" \s* : \s* "$tversion"/x, 'version is correct in meta';
 
 
 done_testing;
