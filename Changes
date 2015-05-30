@@ -2,6 +2,9 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+	* "run" dzil via Perl code instead of calling via `system`
+		because we can't guarantee installers will have it in their path
+
 0.04      2015-05-29 13:39:55PDT-0700 America/Los_Angeles
 
 	* add `provides` to meta; PAUSE can no longer get namespace from distname

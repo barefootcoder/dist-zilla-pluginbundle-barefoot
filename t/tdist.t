@@ -1,6 +1,7 @@
 use Test::Most		0.25;
 use Test::Command	0.10;
 
+use Dist::Zilla::App;
 use Path::Tiny qw< path cwd tempdir >;
 
 
@@ -58,8 +59,8 @@ END
 
 # now build our test dist so we can have some files to test
 
-demand_successful_command("dzil build");
-chdir "$tname-$tversion";
+run_dzil_command("build");
+chdir "$tname-$tversion" or die("failed to run dzil");
 
 my $meta = path('META.json')->slurp;
 
@@ -70,12 +71,8 @@ like $meta, qr/"provides" \s* : /x, 'contains a `provides` in meta';
 done_testing;
 
 
-sub demand_successful_command
+sub run_dzil_command
 {
-	my ($command) = @_;
-
-	# get rid of stdout, but keep stderr
-	# it might aid in debugging
-	is system("$command >/dev/null"), 0, "command succeeded [$command]"
-			or done_testing, exit;
+	local @ARGV = @_;
+	Dist::Zilla::App->run;
 }
