@@ -33,6 +33,11 @@ END
 my $lib = path( 'lib', 'Test' );
 $lib->mkpath;
 $lib->path('Module.pm')->spew( <<'END' );
+# blank lines before and after PODCLASSNAME are required by PodnameFromClassname
+# (for whatever reason)
+
+# PODCLASSNAME
+
 class Test::Module with Some::Role
 {
 # ABSTRACT: Just a module for testing

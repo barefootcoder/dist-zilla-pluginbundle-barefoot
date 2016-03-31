@@ -2,6 +2,8 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+	* fix Pod::Weaver not being able to find distro name
+
 0.04_01   2015-05-30 03:05:29PDT-0700 America/Los_Angeles (TRIAL RELEASE)
 
 	* "run" dzil via Perl code instead of calling via `system`
