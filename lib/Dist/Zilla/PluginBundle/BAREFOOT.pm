@@ -90,7 +90,7 @@ provided $self->auto_prereq,
 												location	=> 'root',
 											}
 			],
-			[ Bugtracker				=>	{ web => 'http://github.com/me/%l/issues' } ],
+			[ Bugtracker				=>	{ web => 'http://github.com/barefootcoder/%l/issues' } ],
 
 #			# generated xt/ tests
 #provided not $self->no_spellcheck,
@@ -221,7 +221,7 @@ This is a [Dist::Zilla] PluginBundle.  It is roughly equivalent to the following
 
 	; should this be in metadata section?
 	[Bugtracker]
-	web = http://github.com/me/%l/issues
+	web = http://github.com/barefootcoder/%l/issues
 
 	; xt tests
 	;[Test::PodSpelling]					; xt/author/pod-spell.t

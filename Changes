@@ -3,6 +3,7 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 {{$NEXT}}
 
 	* fix Pod::Weaver not being able to find distro name
+	* fix bugtracker URLs
 
 0.04_01   2015-05-30 03:05:29PDT-0700 America/Los_Angeles (TRIAL RELEASE)
 
