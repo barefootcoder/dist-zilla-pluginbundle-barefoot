@@ -1,5 +1,4 @@
 use Test::Most		0.25;
-use Test::Command	0.10;
 
 use Dist::Zilla::App;
 use Path::Tiny qw< path cwd tempdir >;
@@ -19,9 +18,6 @@ chdir $tdist;
 my $tname = 'Test-Module';
 my $tversion = '0.01';
 
-#[@Filter]
-#-bundle = @BAREFOOT
-#-remove = GitHubMeta
 path('dist.ini')->spew( <<END );
 name				= $tname
 author				= Buddy Burden <barefoot\@cpan.org>
