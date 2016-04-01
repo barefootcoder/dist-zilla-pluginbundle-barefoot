@@ -2,11 +2,7 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
-0.05_01   2016-04-01 02:50:00-07:00 America/Los_Angeles (TRIAL RELEASE)
-
-		* test
-
-0.05      2016-03-31 19:59:42-07:00 America/Los_Angeles
+0.06      2016-04-01 03:01:47-07:00 America/Los_Angeles
 
 	BUG FIXES:
 		* "run" dzil via Perl code instead of calling via `system`
@@ -17,6 +13,10 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 		* clean up Changes file
 			* consolidate trial versions
 			* add headers
+
+0.05      2016-03-31 19:59:42-07:00 America/Los_Angeles
+
+	--ABORTED ATTEMPT--
 
 0.04      2015-05-29 13:39:55PDT-0700 America/Los_Angeles
 
