@@ -2,6 +2,8 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+0.05      2016-03-31 19:59:42-07:00 America/Los_Angeles
+
 	BUG FIXES:
 		* "run" dzil via Perl code instead of calling via `system`
 			because we can't guarantee installers will have it in their path
