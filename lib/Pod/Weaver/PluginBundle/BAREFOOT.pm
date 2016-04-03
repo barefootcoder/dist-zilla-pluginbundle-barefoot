@@ -2,6 +2,7 @@ use 5.012;
 use MooseX::Declare;
 use Method::Signatures::Modifiers;
 
+# PODCLASSNAME
 class Pod::Weaver::PluginBundle::BAREFOOT
 {
 	use autodie										2.00				;

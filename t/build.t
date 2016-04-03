@@ -11,6 +11,7 @@ my @filter_out =
 (
 	'\[DZ\].*',
 	'\[(@BAREFOOT/)?ReadmeAnyFromPod\] (?i:overrid\w+) README\.pod in root',
+	'\[(@BAREFOOT/)?PodnameFromClassname\] Inserting podname for.*',
 );
 
 

@@ -2,6 +2,7 @@ use 5.012;
 use MooseX::Declare;
 use Method::Signatures::Modifiers;
 
+# PODCLASSNAME
 class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::Easy
 {
 	use autodie										2.00					;

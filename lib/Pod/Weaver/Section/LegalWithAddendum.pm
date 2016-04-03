@@ -2,6 +2,7 @@ use 5.012;
 use MooseX::Declare;
 use Method::Signatures::Modifiers;
 
+# PODCLASSNAME
 class Pod::Weaver::Section::LegalWithAddendum extends Pod::Weaver::Section::Legal
 {
 
