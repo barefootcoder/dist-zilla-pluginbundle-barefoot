@@ -2,6 +2,8 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 {{$NEXT}}
 
+0.06_01   2016-04-02 17:47:33-07:00 America/Los_Angeles (TRIAL RELEASE)
+
 	CODE CLEANUP:
 		* upgrade to latest version of Dist::Zilla::Plugin::PodnameFromClassname
 		  this allows version check, and fewer unnecessary lines in test
