@@ -22,10 +22,10 @@ class Pod::Weaver::PluginBundle::BAREFOOT
 	# VERSION
 
 
-	my $bugtracker_content = <<'END';
+	my $bugtracker_content = <<'END' =~ s/^\h+//mgr;
 		This module is on GitHub.  Feel free to fork and submit patches.  Please note that I develop
 		via TDD (Test-Driven Development), so a patch that includes a failing test is much more
-		likely to get accepted (or least likely to get accepted more quickly).
+		likely to get accepted (or at least likely to get accepted more quickly).
 
 		If you just want to report a problem or suggest a feature, that's okay too.  You can create
 		an issue on GitHub here: {WEB}.
