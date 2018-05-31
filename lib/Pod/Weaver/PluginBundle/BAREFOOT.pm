@@ -3,6 +3,7 @@ use MooseX::Declare;
 use Method::Signatures::Modifiers;
 
 # PODCLASSNAME
+# PODNAME: Pod::Weaver::PluginBundle::BAREFOOT
 class Pod::Weaver::PluginBundle::BAREFOOT
 {
 	use autodie										2.00				;

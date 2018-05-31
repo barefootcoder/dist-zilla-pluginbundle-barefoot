@@ -3,6 +3,7 @@ use MooseX::Declare;
 use Method::Signatures::Modifiers;
 
 # PODCLASSNAME
+# PODNAME: Dist::Zilla::PluginBundle::BAREFOOT
 class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::Easy
 {
 	use autodie										2.00					;
@@ -97,8 +98,8 @@ provided $self->auto_prereq,
 #provided not $self->no_spellcheck,
 #			[ 'Test::PodSpelling'		=>	{ stopwords => $self->stopwords } ],
 #			MetaTests					=>														# core
-#			PodSyntaxTests				=>														# core
-#			PodCoverageTests			=>														# core
+			PodSyntaxTests				=>														# core
+			PodCoverageTests			=>														# core
 #			'Test::Version'				=>
 
 			# metadata

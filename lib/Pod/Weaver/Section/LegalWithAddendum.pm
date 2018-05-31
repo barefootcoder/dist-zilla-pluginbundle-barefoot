@@ -3,6 +3,7 @@ use MooseX::Declare;
 use Method::Signatures::Modifiers;
 
 # PODCLASSNAME
+# PODNAME: Pod::Weaver::Section::LegalWithAddendum
 class Pod::Weaver::Section::LegalWithAddendum extends Pod::Weaver::Section::Legal
 {
 
