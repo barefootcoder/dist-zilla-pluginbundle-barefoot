@@ -7,6 +7,10 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 	BUG FIXES:
 		* fixed typo and whitespace in bugtracker verbiage
 
+	DISTRO FIXES:
+		* move README.PATCHING to more standard CONTRIBUTING
+		  and add more info there
+
 0.06_01   2016-04-02 17:47:33-07:00 America/Los_Angeles (TRIAL RELEASE)
 
 	CODE CLEANUP:

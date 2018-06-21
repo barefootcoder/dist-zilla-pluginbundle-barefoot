@@ -1,0 +1,90 @@
+CONTRIBUTING
+
+Thank you for considering a contribution to this distribution.  This file
+contains instructions that will help you work with the source code.  They are
+just suggestions which will hopefully make it easier to answer common questions
+about contributing.  If you have further questions, feel free to email the
+author or open a GitHub issue.  Both email address and link to the issues page
+can be found in the "SUPPORT" section of this module's POD.
+
+There are many ways to contribute:
+
+IF YOU JUST WANT TO REPORT A BUG, BUT DON'T HAVE ANY CODE TO SUBMIT, that's
+fine.  Open an issue on GitHub (link in the "SUPPORT" section of this module's
+POD).  Supplying code may get the issue addressed more quickly, but bug reports
+are very valuable in and of themselves.
+
+IF YOU WANT TO REPORT A MINOR TYPO IN THE DOCS, you can certainly do a pull
+request.  However, I know that sometimes it seems like a lot of effort to do a
+fork and a pull request for what can sometimes be a change of just a few
+characters.  I'll happily take an email or GitHub issue if that's easier for you
+(email address and link in the "SUPPORT" section of this module's POD).
+
+IF YOU WANT TO SUBMIT LARGER FIXES FOR DOCS, a pull request on GitHub is the
+best way.  (If you don't know how to do that, there are lots of great resources
+on the web, such as this one:
+https://help.github.com/articles/creating-a-pull-request/).  But you should
+probably read the "UNDERSTANDING THIS MODULE'S POD" section below.
+
+IF YOU WANT SUBMIT SOME CODE TO FIX A SMALL-TO-MEDIUM PROBLEM, a pull request on
+GitHub is the best way.  (If you don't know how to do that, there are lots of
+great resources on the web, such as this one:
+https://help.github.com/articles/creating-a-pull-request/).  But you should
+probably read the "RUNNING CODE AND TESTS" section below.  Also, please note
+that I develop via TDD (Test-Driven Development), so a patch that includes a
+failing test is much more likely to get accepted (or least likely to get
+accepted more quickly).
+
+IF YOU WANT TO SUBMIT SOME CODE TO FIX A LARGE PROBLEM, OR ADD A WHOLE NEW
+FEATURE, please open a GitHub issue so we can discuss it first (link in the
+"SUPPORT" section of this module's POD).  This could end up saving you a lot of
+time and/or wasted effort if I want to take the module in a different direction
+from what you were thinking.
+
+RUNNING CODE AND TESTS:
+
+This distribution is managed with Dist::Zilla.  This means than many of the
+usual files you might expect are not in the repository, but are generated at
+release time (e.g. Makefile.PL).
+
+However, you can run unit tests directly using the `prove` tool:
+
+  $ prove -l
+  $ prove -lv t/some_test_file.t
+
+For most distributions, `prove` is entirely sufficent for you to test any
+patches you have.
+
+You may need to satisfy some dependencies.  See the included META.json file for
+a list.  If you install App::mymeta_requires from CPAN, it's easy to satisfy any
+that you are missing by piping the output to your favorite CPAN client, e.g.:
+
+  $ mymeta-requires | cpanm -n
+
+UNDERSTANDING THIS MODULE'S POD:
+
+Much of the POD documentation for this module is generated at release time.
+Depending on the distribution, some documentation may be written in a POD
+dialect called WikiDoc.  (See Pod::WikiDoc on CPAN.)  If you would like to
+submit a documentation edit, please limit yourself to the documentation you see.
+
+If you see typos or documentation issues in the generated docs that are not
+present in the underlying POD, please email or open a GitHub issue instead of
+patching (email address and link in the "SUPPORT" section of this module's POD).
+
+USING DIST::ZILLA WITH THIS MODULE:
+
+Dist::Zilla is a very powerful authoring tool, but requires a number of
+author-specific plugins.  If you would like to use it for contributing, install
+it from CPAN, then use the "authordeps" subcommand in this modules source
+directory and pipe the output to your CPAN client, e.g.:
+
+  $ dzil authordeps | cpanm -n
+
+Once installed, here are some dzil commands you might try:
+
+  $ dzil build
+  $ dzil test
+  $ dzil xtest
+
+You can learn more about Dist::Zilla at http://dzil.org/.
