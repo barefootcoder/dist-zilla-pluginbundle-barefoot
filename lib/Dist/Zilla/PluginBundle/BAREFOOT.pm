@@ -34,7 +34,7 @@ class Dist::Zilla::PluginBundle::BAREFOOT with Dist::Zilla::Role::PluginBundle::
 	use Dist::Zilla::Plugin::CopyFilesFromBuild					();
 	use Dist::Zilla::Plugin::CheckPrereqsIndexed	0.002		();
 	use Dist::Zilla::Plugin::CheckVersionIncrement	0.121750	();
-	#use Dist::Zilla::Plugin::MetaProvides::Package	1.14		();		# hides DB/main/private packages
+	use Dist::Zilla::Plugin::MetaProvides::Package	1.14		();		# hides DB/main/private packages
 	use Dist::Zilla::Plugin::MetaProvides::Class	2.001		();		# adds 'provides' to META.* for `class`
 	use Dist::Zilla::Plugin::PodnameFromClassname	0.1100		();		# stops Pod::Weaver from complaining
 	use Dist::Zilla::Plugin::CheckChangesHasContent				();
@@ -110,7 +110,7 @@ provided $self->auto_prereq,
 			#									package		=> [qw< DB >]
 			#								}
 			#],
-			#[ 'MetaProvides::Package'	=>	{ meta_noindex => 1 } ],
+			[ 'MetaProvides::Package'	=>	{ meta_noindex => 0 } ],
 			[ 'MetaProvides::Class'		=>	{ inherit_version => 1 } ],							# AFTER MetaNoIndex
 			#MetaYAML					=>														# core
 			MetaJSON					=>														# core

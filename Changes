@@ -8,6 +8,8 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 		* fixed typo and whitespace in bugtracker verbiage
 
 	DISTRO FIXES:
+		* unit test to make sure `provides` is in META
+		  since I keep screwing that up
 		* move README.PATCHING to more standard CONTRIBUTING
 		  and add more info there
 

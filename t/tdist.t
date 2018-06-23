@@ -1,5 +1,6 @@
 use Test::Most		0.25;
 
+use JSON::MaybeXS;
 use Dist::Zilla::App;
 use Path::Tiny qw< path cwd tempdir >;
 
@@ -30,19 +31,19 @@ fake_release = 1
 repository_link = none
 END
 
-my $lib = path( 'lib', 'Test' );
-$lib->mkpath;
-$lib->path('Module.pm')->spew( <<'END' );
-# blank lines before and after PODCLASSNAME are required by PodnameFromClassname
-# (for whatever reason)
+path('Changes')->spew( <<'END' );
+Revision history for Test-Module
+
+{{$NEXT}}
+END
+
+create_lib_file( 'Test::Module' => <<'END' );
 # PODCLASSNAME
 class Test::Module with Some::Role
 {
 # ABSTRACT: Just a module for testing
 # VERSION
 }
-
-1;
 END
 
 my $t = path( 't' );
@@ -61,10 +62,11 @@ END
 run_dzil_command("build");
 chdir "$tname-$tversion" or die("failed to run dzil");
 
-my $meta = path('META.json')->slurp;
+my $meta = decode_json(path('META.json')->slurp);
 
-like $meta, qr/"version" \s* : \s* "$tversion"/x, 'version is correct in meta';
-like $meta, qr/"provides" \s* : /x, 'contains a `provides` in meta';
+is $meta->{version}, $tversion, 'version is correct in meta';
+cmp_deeply [ sort keys %{ $meta->{provides} } ], [ qw< Test::Module > ], '`provides` in meta is correct';
+
 
 
 done_testing;
@@ -74,4 +76,17 @@ sub run_dzil_command
 {
 	local @ARGV = @_;
 	Dist::Zilla::App->run;
+}
+
+
+sub create_lib_file
+{
+	my ($module, $content) = @_;
+	my @dirs = split('::', $module);
+	$module = pop @dirs;
+	$module .= '.pm';
+
+	my $lib = path( 'lib', @dirs );
+	$lib->mkpath;
+	$lib->path($module)->spew( $content );
 }
