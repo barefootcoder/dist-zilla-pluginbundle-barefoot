@@ -57,6 +57,12 @@ done_testing;
 END
 
 
+# this is an attempt to gather more information as to why we're seeing so many failures on CPAN Testers
+diag "pwd: ", cwd;
+diag "files:";
+diag $_ foreach map { "  $_" } glob('*');
+
+
 # now build our test dist so we can have some files to test
 
 run_dzil_command("build");
