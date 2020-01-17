@@ -6,6 +6,7 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 
 	BUG FIXES:
 		* fixed typo and whitespace in bugtracker verbiage
+		* hopefully fix the package/class `provides` issue (finally!)
 
 	DISTRO FIXES:
 		* unit test to make sure `provides` is in META

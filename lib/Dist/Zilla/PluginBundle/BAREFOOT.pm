@@ -110,7 +110,6 @@ provided $self->auto_prereq,
 			#									package		=> [qw< DB >]
 			#								}
 			#],
-			[ 'MetaProvides::Package'	=>	{ meta_noindex => 0 } ],
 			[ 'MetaProvides::Class'		=>	{ inherit_version => 1 } ],							# AFTER MetaNoIndex
 			#MetaYAML					=>														# core
 			MetaJSON					=>														# core

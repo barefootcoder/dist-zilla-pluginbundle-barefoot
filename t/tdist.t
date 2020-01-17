@@ -71,7 +71,7 @@ chdir "$tname-$tversion" or die("failed to run dzil");
 my $meta = decode_json(path('META.json')->slurp);
 
 is $meta->{version}, $tversion, 'version is correct in meta';
-cmp_deeply [ sort keys %{ $meta->{provides} } ], [ qw< Test::Module > ], '`provides` in meta is correct';
+eq_or_diff [ sort keys %{ $meta->{provides} } ], [ qw< Test::Module > ], '`provides` in meta is correct';
 
 
 
