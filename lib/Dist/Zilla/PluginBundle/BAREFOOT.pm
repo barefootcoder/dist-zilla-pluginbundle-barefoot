@@ -130,7 +130,7 @@ provided $self->auto_prereq,
 			CheckVersionIncrement		=>
 			#CheckPrereqsIndexed			=>
 			CheckChangesHasContent		=>
-			#CheckExtraTests				=>
+			CheckExtraTests				=>
 			TestRelease					=>														# core
 			ConfirmRelease				=>														# core
 
@@ -270,7 +270,7 @@ This is a [Dist::Zilla] PluginBundle.  It is roughly equivalent to the following
 	;[CheckPrereqsIndexed]				; ensure prereqs are on CPAN
 	[CheckVersionIncrement]				; ensure version has been bumped
 	[CheckChangesHasContent]			; ensure Changes has been updated
-	;[CheckExtraTests]					; ensure xt/ tests pass
+	[CheckExtraTests]					; ensure xt/ tests pass
 	[TestRelease]						; ensure t/ tests pass
 	[ConfirmRelease]					; prompt before uploading
 

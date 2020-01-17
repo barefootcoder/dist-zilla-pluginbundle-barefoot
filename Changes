@@ -3,6 +3,7 @@ Revision history for Dist-Zilla-PluginBundle-BAREFOOT
 {{$NEXT}}
 	NEW FEATURES:
 		* now including POD tests
+		* now including "extra" tests (author tests, etc)
 
 	BUG FIXES:
 		* fixed typo and whitespace in bugtracker verbiage
